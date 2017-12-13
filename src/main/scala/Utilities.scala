@@ -15,7 +15,7 @@ object Utilities {
   val url_contains_service: (Column) => Column = (x) => { x.like("/service/%")}
   lazy val dataset:Dataset[NginxLogRecord] = sparkSession.read.text(path).map{
     record => parseNginxLogRecord(record)
-  }.where(url_contains_service(col("URL")))
+  }.where(url_contains_service(col("URL"))).as[NginxLogRecord]
 
   def parseNginxLogRecord(row: Row): NginxLogRecord = {
     val r = Pattern.compile("\"").matcher(row.toString()).replaceAll("")
